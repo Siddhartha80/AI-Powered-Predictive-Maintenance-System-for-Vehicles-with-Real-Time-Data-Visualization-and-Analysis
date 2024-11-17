@@ -45,6 +45,7 @@ File: engine_data.csv
 - Adjust the sliders to simulate sensor values and get predictions.
 - View confidence levels for predictions and suggestions for maintenance.
 
+![Values1](https://github.com/user-attachments/assets/39e3a577-b8c3-4587-b4ed-c699955f1361)
 
 
 

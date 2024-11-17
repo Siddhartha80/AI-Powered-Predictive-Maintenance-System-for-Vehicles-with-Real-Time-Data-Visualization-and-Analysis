@@ -1,9 +1,9 @@
 # AI-Powered-Predictive-Maintenance-System-for-Vehicles-with-Real-Time-Data-Visualization-and-Analysis
 This project aims to implement an AI-driven predictive maintenance system for engines, focusing on using Gradient Boosting Models to predict engine conditions based on sensor data. The solution includes:
 
-Data analysis and feature engineering.
-A trained model saved as a .pkl file.
-A user-friendly interface using Streamlit to predict engine health.
+<br> Data analysis and feature engineering.
+<br> A trained model saved as a .pkl file.
+<br> A user-friendly interface using Streamlit to predict engine health.
 
 
 # Introduction

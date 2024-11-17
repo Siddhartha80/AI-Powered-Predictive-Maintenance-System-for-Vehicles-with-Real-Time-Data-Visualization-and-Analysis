@@ -1,11 +1,9 @@
 # AI-Powered-Predictive-Maintenance-System-for-Vehicles-with-Real-Time-Data-Visualization-and-Analysis
 This project aims to implement an AI-driven predictive maintenance system for engines, focusing on using Gradient Boosting Models to predict engine conditions based on sensor data. The solution includes:
 
-<br> Data analysis and feature engineering.
-
-<br> A trained model saved as a .pkl file.
-
-<br> A user-friendly interface using Streamlit to predict engine health.
+- Data analysis and feature engineering.
+- A trained model saved as a .pkl file.
+- A user-friendly interface using Streamlit to predict engine health.
 
 
 # Introduction
@@ -14,3 +12,17 @@ Predictive maintenance powered by AI-driven analytics is transforming industries
 This system uses advanced machine learning models, such as Gradient Boosting, to process large datasets and provide actionable insights. These predictions enable preemptive alerts for maintenance, optimize spare parts inventory, and enhance customer satisfaction by minimizing vehicle downtime and ensuring better safety and reliability. The system's continuous learning ability allows for improved predictions over time.
 
 The implementation is divided into several phases: data integration, AI model development, testing with select OEMs, and full-scale rollout across networks. By adopting this AI-driven predictive maintenance model, Volkswagen aims to revolutionize vehicle management, providing enhanced maintenance solutions for better vehicle performance and customer experience.
+
+
+# Features
+Collects real-time sensor data from vehicles.
+Preprocesses sensor data for reliability.
+Utilizes GBM machine learning model for predictive maintenance.
+Integrates a web application interface using Streamlit for real-time data visualization and predictions.
+Predicts maintenance probability based on model output.
+Estimates maintenance date 2-3 weeks in advance.
+Provides probability percentage for potential part failure.
+Enhances predictive accuracy and allows proactive intervention.
+Facilitates timely maintenance scheduling to minimize downtime.
+
+

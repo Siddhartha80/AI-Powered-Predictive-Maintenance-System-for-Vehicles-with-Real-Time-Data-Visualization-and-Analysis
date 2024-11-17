@@ -80,7 +80,10 @@ The project requires the following Python libraries:
 ![download](https://github.com/user-attachments/assets/583ea90c-fa2d-4102-a9f5-c5842f4c94b4)
 
 
+# Results
 
+ROC Curve: Displays the true positive rate vs. false positive rate for the model (image from images/roc_curve.png)
+![download](https://github.com/user-attachments/assets/3c2f0c4e-29bd-423e-a66f-cd385ded5775)
 
 
 

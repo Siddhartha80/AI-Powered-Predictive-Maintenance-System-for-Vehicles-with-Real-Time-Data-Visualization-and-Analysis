@@ -15,14 +15,14 @@ The implementation is divided into several phases: data integration, AI model de
 
 
 # Features
-Collects real-time sensor data from vehicles.
-Preprocesses sensor data for reliability.
-Utilizes GBM machine learning model for predictive maintenance.
-Integrates a web application interface using Streamlit for real-time data visualization and predictions.
-Predicts maintenance probability based on model output.
-Estimates maintenance date 2-3 weeks in advance.
-Provides probability percentage for potential part failure.
-Enhances predictive accuracy and allows proactive intervention.
-Facilitates timely maintenance scheduling to minimize downtime.
+- Collects real-time sensor data from vehicles.
+- Preprocesses sensor data for reliability.
+- Utilizes GBM machine learning model for predictive maintenance.
+- Integrates a web application interface using Streamlit for real-time data visualization and predictions.
+- Predicts maintenance probability based on model output.
+- Estimates maintenance date 2-3 weeks in advance.
+- Provides probability percentage for potential part failure.
+- Enhances predictive accuracy and allows proactive intervention.
+- Facilitates timely maintenance scheduling to minimize downtime.
 
 

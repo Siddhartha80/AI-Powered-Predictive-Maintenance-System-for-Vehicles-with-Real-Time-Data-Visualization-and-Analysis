@@ -48,6 +48,10 @@ The implementation is divided into several phases: data integration, AI model de
 # Dependencies
 The project requires the following Python libraries:
 - Pandas
+
+
+![arch1](https://github.com/user-attachments/assets/79b49b70-5563-4553-ad84-8b3928a5c19d)
+
 - Numpy
 - scikit-learn
 - Matplotlib

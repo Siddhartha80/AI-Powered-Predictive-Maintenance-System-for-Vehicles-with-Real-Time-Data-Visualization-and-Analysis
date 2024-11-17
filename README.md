@@ -13,8 +13,14 @@ This system uses advanced machine learning models, such as Gradient Boosting, to
 
 The implementation is divided into several phases: data integration, AI model development, testing with select OEMs, and full-scale rollout across networks. By adopting this AI-driven predictive maintenance model, Volkswagen aims to revolutionize vehicle management, providing enhanced maintenance solutions for better vehicle performance and customer experience.
 
+# 2. Advantages
+- Regular maintenance guarantees the best possible performance from your car.
+- Prior to starting lengthy trips, resources are optimised and emergency repairs are avoided.
+- Increases the safety of both passengers and drivers.
+- Reduces unplanned breakdowns, increasing supply chain efficiency.
+- Ensures dependable transport services, which raises customer satisfaction.
 
-# 2. Features
+# 3. Features
 - Collects real-time sensor data from vehicles.
 - Preprocesses sensor data for reliability.
 - Utilizes GBM machine learning model for predictive maintenance.
@@ -25,18 +31,22 @@ The implementation is divided into several phases: data integration, AI model de
 - Enhances predictive accuracy and allows proactive intervention.
 - Facilitates timely maintenance scheduling to minimize downtime.
 
-# 3. Dataset
+# 4. Dataset
 File: engine_data.csv
 - The dataset contains sensor readings like engine RPM, lubricant oil pressure, fuel pressure, and more, along with labels indicating engine condition.
 
+# 5. Architecture
 
 
-# 4. Advantages
-- Regular maintenance guarantees the best possible performance from your car.
-- Prior to starting lengthy trips, resources are optimised and emergency repairs are avoided.
-- Increases the safety of both passengers and drivers.
-- Reduces unplanned breakdowns, increasing supply chain efficiency.
-- Ensures dependable transport services, which raises customer satisfaction.
+![arch1](https://github.com/user-attachments/assets/796ffabf-3b81-4a60-a413-27de3f451a47)
+
+# 6. Usage
+- Access the web interface via localhost:8501.
+- Adjust the sliders to simulate sensor values and get predictions.
+- View confidence levels for predictions and suggestions for maintenance.
+
+
+
 
 
 # 5. Repository Contents

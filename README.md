@@ -31,7 +31,7 @@ File: engine_data.csv
 
 
 
-# Advantages
+# 4. Advantages
 - Regular maintenance guarantees the best possible performance from your car.
 - Prior to starting lengthy trips, resources are optimised and emergency repairs are avoided.
 - Increases the safety of both passengers and drivers.
@@ -39,7 +39,7 @@ File: engine_data.csv
 - Ensures dependable transport services, which raises customer satisfaction.
 
 
-# Repository Contents
+# 5. Repository Contents
 
 - **Data/**: Contains the dataset used for training the model.
   - **engine.csv**: Contains engine performance data.
@@ -50,7 +50,7 @@ File: engine_data.csv
 - **requirements.txt**: Lists Python libraries required for running the project.
 
 
-# Dependencies
+# 6. Dependencies
 The project requires the following Python libraries:
 - Pandas
 ![download](https://github.com/user-attachments/assets/bc870cbc-1a76-40f0-ab50-114cfe183937)

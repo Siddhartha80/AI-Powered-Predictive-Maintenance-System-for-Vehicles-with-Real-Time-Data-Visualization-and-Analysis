@@ -34,8 +34,31 @@ The implementation is divided into several phases: data integration, AI model de
 - Ensures dependable transport services, which raises customer satisfaction.
 
 
-- **data**: Contains dataset files.
+# Repository Contents
+
+- **Data/**: Contains the dataset used for training the model.
   - **engine.csv**: Contains engine performance data.
+- **models/**: Includes the trained model (model.pkl) used for inference
+- **app/**: Streamlit app for user interaction and predictions.
+- **notebooks/**: A notebook with exploratory data analysis (EDA) and model training processes.
+- **images/**: Stores visual outputs like architecture diagrams and ROC.
+- **requirements.txt**: Lists Python libraries required for running the project.
+
+
+# Dependencies
+The project requires the following Python libraries:
+- Pandas
+- Numpy
+- scikit-learn
+- Matplotlib
+- seaborn
+- streamlit
+- pickle-mixin
+
+
+
+
+
 
 
 

@@ -26,3 +26,13 @@ The implementation is divided into several phases: data integration, AI model de
 - Facilitates timely maintenance scheduling to minimize downtime.
 
 
+# Advantages
+- Regular maintenance guarantees the best possible performance from your car.
+- Prior to starting lengthy trips, resources are optimised and emergency repairs are avoided.
+- Increases the safety of both passengers and drivers.
+- Reduces unplanned breakdowns, increasing supply chain efficiency.
+- Ensures dependable transport services, which raises customer satisfaction.
+
+
+
+

@@ -48,14 +48,15 @@ The implementation is divided into several phases: data integration, AI model de
 # Dependencies
 The project requires the following Python libraries:
 - Pandas
-
-
-![arch1](https://github.com/user-attachments/assets/79b49b70-5563-4553-ad84-8b3928a5c19d)
-
+![download](https://github.com/user-attachments/assets/bc870cbc-1a76-40f0-ab50-114cfe183937)
 - Numpy
+![download](https://github.com/user-attachments/assets/3fcfdadf-239d-4bb8-a84b-2e879ce639d7)
 - scikit-learn
+![download](https://github.com/user-attachments/assets/2607b27e-26a3-42d9-80fa-037ae9247a41)
+
 - Matplotlib
 - seaborn
+
 - streamlit
 - pickle-mixin
 

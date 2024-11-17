@@ -53,12 +53,16 @@ The project requires the following Python libraries:
 ![download](https://github.com/user-attachments/assets/3fcfdadf-239d-4bb8-a84b-2e879ce639d7)
 - scikit-learn
 ![download](https://github.com/user-attachments/assets/2607b27e-26a3-42d9-80fa-037ae9247a41)
-
 - Matplotlib
+![download](https://github.com/user-attachments/assets/471432df-7693-4dab-8fbe-28db6abc5bd5)
+
+
 - seaborn
+![download](https://github.com/user-attachments/assets/f47a7af8-418f-4bce-9272-5544f0bee576)
 
 - streamlit
-- pickle-mixin
+![download](https://github.com/user-attachments/assets/583ea90c-fa2d-4102-a9f5-c5842f4c94b4)
+
 
 
 

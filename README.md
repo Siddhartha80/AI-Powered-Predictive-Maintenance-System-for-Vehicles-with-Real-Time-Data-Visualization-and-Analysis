@@ -141,6 +141,6 @@ python src/train_model.py --roc-plot images/roc_curve.png
 ## Author
 
 **Siddhartha Mettu**
-M.S. Data Science, Arizona State University
+B.Tech Aritificial Intelligence, Amrita Vishwa Vidyapeetham
 
 [LinkedIn](https://www.linkedin.com/in/siddhartha-mettu/) · [GitHub](https://github.com/Siddhartha80)

@@ -1,86 +1,101 @@
-import streamlit as st
+"""Streamlit demo: predict engine condition from sensor readings.
+
+Run from the repository root:
+
+    streamlit run app/app.py
+"""
+
+from __future__ import annotations
+
 import pickle
-import numpy as np
+from pathlib import Path
 
-# Load the trained model 
-with open('model.pkl', 'rb') as file:
-    model = pickle.load(file)
+import pandas as pd
+import streamlit as st
 
-# Define the customized ranges for each feature based on dataset statistics
-custom_ranges = {
-    'Engine rpm': (61.0, 2239.0),
-    'Lub oil pressure': (0.003384, 7.265566),
-    'Fuel pressure': (0.003187, 21.138326),
-    'Coolant pressure': (0.002483, 7.478505),
-    'lub oil temp': (71.321974, 89.580796),
-    'Coolant temp': (61.673325, 195.527912),
-    'Temperature_difference': (-22.669427, 119.008526)
+MODEL_PATH = Path(__file__).resolve().parent.parent / "models" / "model.pkl"
+
+# (label, description, min, max): slider ranges come from the training-data statistics.
+# The key order must match the column order the model was trained on.
+FEATURES = {
+    "Engine rpm": ("Engine RPM", "Revolutions per minute of the engine.", 61.0, 2239.0),
+    "Lub oil pressure": ("Lub Oil Pressure", "Pressure of the lubricating oil.", 0.003384, 7.265566),
+    "Fuel pressure": ("Fuel Pressure", "Pressure of the fuel.", 0.003187, 21.138326),
+    "Coolant pressure": ("Coolant Pressure", "Pressure of the coolant.", 0.002483, 7.478505),
+    "lub oil temp": ("Lub Oil Temperature", "Temperature of the lubricating oil.", 71.321974, 89.580796),
+    "Coolant temp": ("Coolant Temperature", "Temperature of the coolant.", 61.673325, 195.527912),
+    "Temperature_difference": (
+        "Temperature Difference",
+        "Coolant temperature minus lubricating-oil temperature.",
+        -22.669427,
+        119.008526,
+    ),
 }
 
-# Feature Descriptions
-feature_descriptions = {
-    'Engine rpm': 'Revolution per minute of the engine.',
-    'Lub oil pressure': 'Pressure of the lubricating oil.',
-    'Fuel pressure': 'Pressure of the fuel.',
-    'Coolant pressure': 'Pressure of the coolant.',
-    'lub oil temp': 'Temperature of the lubricating oil.',
-    'Coolant temp': 'Temperature of the coolant.',
-    'Temperature_difference': 'Temperature difference between components.'
-}
 
-# Engine Condition Prediction App
-def main():
+@st.cache_resource
+def load_model():
+    with open(MODEL_PATH, "rb") as f:
+        return pickle.load(f)
+
+
+def default_value(low: float, high: float) -> float:
+    return (low + high) / 2
+
+
+def reset_values() -> None:
+    for name, (_, _, low, high) in FEATURES.items():
+        st.session_state[name] = default_value(low, high)
+
+
+def predict_condition(model, values: dict[str, float]) -> tuple[int, float]:
+    """Return the predicted class and the model's probability for that class."""
+    row = pd.DataFrame([values], columns=list(FEATURES))
+    proba = model.predict_proba(row)[0]
+    predicted = int(proba.argmax())
+    return predicted, float(proba[predicted])
+
+
+def main() -> None:
+    st.set_page_config(page_title="Engine Condition Prediction", page_icon="🔧")
     st.title("Engine Condition Prediction")
+    st.caption(
+        "Adjust the sensor readings and let the Gradient Boosting model classify the engine. "
+        "Educational demo, not a diagnostic tool."
+    )
 
-    # Display feature descriptions
+    try:
+        model = load_model()
+    except Exception as exc:  # incompatible scikit-learn version, missing file, ...
+        st.error(
+            "Could not load `models/model.pkl`. It was saved with scikit-learn 1.4.2, so install "
+            "the pinned versions in `requirements.txt`, or regenerate the model with "
+            "`python src/train_model.py`."
+        )
+        st.exception(exc)
+        st.stop()
+
     st.sidebar.title("Feature Descriptions")
-    for feature, description in feature_descriptions.items():
-        st.sidebar.markdown(f"**{feature}:** {description}")
+    for label, description, _, _ in FEATURES.values():
+        st.sidebar.markdown(f"**{label}:** {description}")
 
-    # Input widgets with customized ranges
-    engine_rpm = st.slider("Engine RPM", min_value=float(custom_ranges['Engine rpm'][0]), 
-                           max_value=float(custom_ranges['Engine rpm'][1]), 
-                           value=float(custom_ranges['Engine rpm'][1] / 2))
-    lub_oil_pressure = st.slider("Lub Oil Pressure", min_value=custom_ranges['Lub oil pressure'][0], 
-                                 max_value=custom_ranges['Lub oil pressure'][1], 
-                                 value=(custom_ranges['Lub oil pressure'][0] + custom_ranges['Lub oil pressure'][1]) / 2)
-    fuel_pressure = st.slider("Fuel Pressure", min_value=custom_ranges['Fuel pressure'][0], 
-                              max_value=custom_ranges['Fuel pressure'][1], 
-                              value=(custom_ranges['Fuel pressure'][0] + custom_ranges['Fuel pressure'][1]) / 2)
-    coolant_pressure = st.slider("Coolant Pressure", min_value=custom_ranges['Coolant pressure'][0], 
-                                 max_value=custom_ranges['Coolant pressure'][1], 
-                                 value=(custom_ranges['Coolant pressure'][0] + custom_ranges['Coolant pressure'][1]) / 2)
-    lub_oil_temp = st.slider("Lub Oil Temperature", min_value=custom_ranges['lub oil temp'][0], 
-                             max_value=custom_ranges['lub oil temp'][1], 
-                             value=(custom_ranges['lub oil temp'][0] + custom_ranges['lub oil temp'][1]) / 2)
-    coolant_temp = st.slider("Coolant Temperature", min_value=custom_ranges['Coolant temp'][0], 
-                             max_value=custom_ranges['Coolant temp'][1], 
-                             value=(custom_ranges['Coolant temp'][0] + custom_ranges['Coolant temp'][1]) / 2)
-    temp_difference = st.slider("Temperature Difference", min_value=custom_ranges['Temperature_difference'][0], 
-                                max_value=custom_ranges['Temperature_difference'][1], 
-                                value=(custom_ranges['Temperature_difference'][0] + custom_ranges['Temperature_difference'][1]) / 2)
+    values = {}
+    for name, (label, _, low, high) in FEATURES.items():
+        if name not in st.session_state:
+            st.session_state[name] = default_value(low, high)
+        values[name] = st.slider(label, min_value=low, max_value=high, key=name)
 
-    # Predict button
-    if st.button("Predict Engine Condition"):
-        result, confidence = predict_condition(engine_rpm, lub_oil_pressure, fuel_pressure, coolant_pressure, lub_oil_temp, coolant_temp, temp_difference)
-        
+    predict_col, reset_col, _ = st.columns([2, 2, 5])
+    predict_clicked = predict_col.button("Predict Engine Condition", type="primary")
+    reset_col.button("Reset Values", on_click=reset_values)
 
-        # Explanation
+    if predict_clicked:
+        result, probability = predict_condition(model, values)
         if result == 0:
-            st.info(f"The engine is predicted to be in a normal condition. As the  Confidence level of the machine is : {1.0 - confidence:.2%}")
+            st.success(f"The engine is predicted to be in **normal condition** (model probability: {probability:.1%}).")
         else:
-            st.warning(f"Warning! Please investigate further,As the  Confidence level of the machine is : {1.0 - confidence:.2%}")
+            st.warning(f"**Warning:** please investigate further (model probability: {probability:.1%}).")
 
-    # Reset button
-    if st.button("Reset Values"):
-        st.experimental_rerun()
-
-# Function to predict engine condition
-def predict_condition(engine_rpm, lub_oil_pressure, fuel_pressure, coolant_pressure, lub_oil_temp, coolant_temp, temp_difference):
-    input_data = np.array([engine_rpm, lub_oil_pressure, fuel_pressure, coolant_pressure, lub_oil_temp, coolant_temp, temp_difference]).reshape(1, -1)
-    prediction = model.predict(input_data)
-    confidence = model.predict_proba(input_data)[:, 1]  # For binary classification, adjust as needed
-    return prediction[0], confidence[0]
 
 if __name__ == "__main__":
     main()

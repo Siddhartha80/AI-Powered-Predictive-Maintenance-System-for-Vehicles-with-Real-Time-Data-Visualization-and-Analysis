@@ -1,102 +1,146 @@
-# AI-Powered-Predictive-Maintenance-System-for-Vehicles-with-Real-Time-Data-Visualization-and-Analysis
-This project aims to implement an AI-driven predictive maintenance system for engines, focusing on using Gradient Boosting Models to predict engine conditions based on sensor data. The solution includes:
+# AI-Powered Predictive Maintenance for Vehicles
 
-- Data analysis and feature engineering.
-- A trained model saved as a .pkl file.
-- A user-friendly interface using Streamlit to predict engine health.
+![Python](https://img.shields.io/badge/Python-3.10--3.12-3776AB?logo=python&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-1.4.2-F7931E?logo=scikitlearn&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-app-FF4B4B?logo=streamlit&logoColor=white)
+![Jupyter](https://img.shields.io/badge/Jupyter-notebook-F37626?logo=jupyter&logoColor=white)
 
+A machine learning project that classifies engine condition from sensor readings and serves the model through an interactive Streamlit app. A Gradient Boosting classifier is trained on **19,535 engine sensor records**, and the app lets you adjust each reading and see the predicted condition along with the model's probability.
 
-# 1. Introduction
-Predictive maintenance powered by AI-driven analytics is transforming industries by shifting from reactive to proactive maintenance strategies, particularly in the automotive sector. Volkswagen is at the forefront of leveraging this technology to enhance the reliability and performance of their vehicles. Through an intelligent maintenance ecosystem, Volkswagen integrates real-time sensor data, historical maintenance records, and external factors like weather and driving patterns to predict potential engine failures with high accuracy.
+> **Scope:** this is an educational / portfolio project built on a static dataset. It is a baseline model, not a production diagnostic system. See [Results](#results) and [Limitations](#limitations) for an honest look at performance.
 
-This system uses advanced machine learning models, such as Gradient Boosting, to process large datasets and provide actionable insights. These predictions enable preemptive alerts for maintenance, optimize spare parts inventory, and enhance customer satisfaction by minimizing vehicle downtime and ensuring better safety and reliability. The system's continuous learning ability allows for improved predictions over time.
+## Demo
 
-The implementation is divided into several phases: data integration, AI model development, testing with select OEMs, and full-scale rollout across networks. By adopting this AI-driven predictive maintenance model, Volkswagen aims to revolutionize vehicle management, providing enhanced maintenance solutions for better vehicle performance and customer experience.
+| Sensor inputs | Prediction |
+|:---:|:---:|
+| ![Streamlit app with sensor sliders](images/Values1.png) | ![Prediction result in the app](images/values2.png) |
 
-# 2. Advantages
-- Regular maintenance guarantees the best possible performance from your car.
-- Prior to starting lengthy trips, resources are optimised and emergency repairs are avoided.
-- Increases the safety of both passengers and drivers.
-- Reduces unplanned breakdowns, increasing supply chain efficiency.
-- Ensures dependable transport services, which raises customer satisfaction.
+Run the app locally with `streamlit run app/app.py` (see [Getting Started](#getting-started)).
 
-# 3. Features
-- Collects real-time sensor data from vehicles.
-- Preprocesses sensor data for reliability.
-- Utilizes GBM machine learning model for predictive maintenance.
-- Integrates a web application interface using Streamlit for real-time data visualization and predictions.
-- Predicts maintenance probability based on model output.
-- Estimates maintenance date 2-3 weeks in advance.
-- Provides probability percentage for potential part failure.
-- Enhances predictive accuracy and allows proactive intervention.
-- Facilitates timely maintenance scheduling to minimize downtime.
+## Features
 
-# 4. Dataset
-File: engine_data.csv
-- The dataset contains sensor readings like engine RPM, lubricant oil pressure, fuel pressure, and more, along with labels indicating engine condition.
+- **Exploratory analysis and feature engineering** in a Jupyter notebook, including a derived `Temperature_difference` feature (coolant temp minus lubricating-oil temp).
+- **Gradient Boosting classifier** trained on six sensor readings plus the derived feature.
+- **Interactive Streamlit app** with a slider per sensor, a one-click prediction, and a reset button. The result shows the predicted class and the model's probability for it.
+- **Reproducible training:** `src/train_model.py` rebuilds the model and the evaluation metrics from the raw CSV in one command.
 
-# 5. Architecture
+## Dataset
 
+`Data/engine_data.csv`: **19,535 rows**, no missing values, no duplicate rows.
 
-![arch1](https://github.com/user-attachments/assets/796ffabf-3b81-4a60-a413-27de3f451a47)
+| Column | Role | Observed range |
+|--------|------|----------------|
+| `Engine rpm` | Feature | 61 to 2,239 |
+| `Lub oil pressure` | Feature | 0.003 to 7.27 |
+| `Fuel pressure` | Feature | 0.003 to 21.14 |
+| `Coolant pressure` | Feature | 0.002 to 7.48 |
+| `lub oil temp` | Feature | 71.3 to 89.6 |
+| `Coolant temp` | Feature | 61.7 to 195.5 |
+| `Temperature_difference` | Derived feature | -22.7 to 119.0 |
+| `Engine Condition` | **Target** (0 / 1) | 63.1% class 1, 36.9% class 0 |
 
-# 6. Usage
-- Access the web interface via localhost:8501.
-- Adjust the sliders to simulate sensor values and get predictions.
-- View confidence levels for predictions and suggestions for maintenance.
+In the app, class `0` is presented as *normal* and class `1` as *investigate further*.
 
-![Values1](https://github.com/user-attachments/assets/39e3a577-b8c3-4587-b4ed-c699955f1361)
+## Approach
 
+1. **Feature engineering:** add `Temperature_difference = Coolant temp - lub oil temp`.
+2. **Split:** 60% train / 40% test (`random_state=42`), giving 11,721 training rows and 7,814 test rows.
+3. **Model:** `GradientBoostingClassifier` (100 estimators, learning rate 0.1, max depth 3, subsample 0.8, `max_features="sqrt"`, `min_samples_leaf=5`).
+4. **Serving:** the trained model is saved to `models/model.pkl` and loaded by the Streamlit app, which builds a one-row DataFrame from the slider values and calls `predict_proba`.
 
+## Results
 
+Evaluated on the 7,814-row held-out test set:
 
-# 5. Repository Contents
+| Metric | Value |
+|--------|-------|
+| Accuracy | **66.6%** |
+| ROC-AUC | **0.70** |
 
-- **Data/**: Contains the dataset used for training the model.
-  - **engine.csv**: Contains engine performance data.
-- **models/**: Includes the trained model (model.pkl) used for inference
-- **app/**: Streamlit app for user interaction and predictions.
-- **notebooks/**: A notebook with exploratory data analysis (EDA) and model training processes.
-- **images/**: Stores visual outputs like architecture diagrams and ROC.
-- **requirements.txt**: Lists Python libraries required for running the project.
+| Class | Precision | Recall | F1 | Support |
+|-------|-----------|--------|----|---------|
+| 0 (normal) | 0.59 | 0.36 | 0.45 | 2,926 |
+| 1 (investigate) | 0.69 | 0.85 | 0.76 | 4,888 |
 
+![ROC curve](images/roc_curve.png)
 
-# 6. Dependencies
-The project requires the following Python libraries:
-- Pandas
-![download](https://github.com/user-attachments/assets/bc870cbc-1a76-40f0-ab50-114cfe183937)
-- Numpy
-![download](https://github.com/user-attachments/assets/3fcfdadf-239d-4bb8-a84b-2e879ce639d7)
-- scikit-learn
-![download](https://github.com/user-attachments/assets/2607b27e-26a3-42d9-80fa-037ae9247a41)
-- Matplotlib
-![download](https://github.com/user-attachments/assets/471432df-7693-4dab-8fbe-28db6abc5bd5)
+The model is clearly better than chance (AUC 0.70, above the 0.50 baseline) but remains a modest baseline: it catches 85% of class 1 cases while recalling only 36% of class 0, so it leans toward the majority class.
 
+You can reproduce these numbers with `python src/train_model.py`.
 
-- seaborn
-![download](https://github.com/user-attachments/assets/f47a7af8-418f-4bce-9272-5544f0bee576)
+## Architecture
 
-- streamlit
-![download](https://github.com/user-attachments/assets/583ea90c-fa2d-4102-a9f5-c5842f4c94b4)
+![System architecture](images/arch1.jpg)
 
+*Conceptual architecture. In this repository the implemented path is `engine_data.csv` → model training → `models/model.pkl` → Streamlit app. The diagram's optional database / cloud-storage layer and its scaling and encoding stages are not implemented: the model works on raw sensor values plus one derived feature.*
 
-# 7. Results
+## Repository Structure
 
-ROC Curve: Displays the true positive rate vs. false positive rate for the model (image from images/roc_curve.png)
-![download](https://github.com/user-attachments/assets/3c2f0c4e-29bd-423e-a66f-cd385ded5775)
+```
+.
+├── app/
+│   └── app.py                    # Streamlit app
+├── Data/
+│   └── engine_data.csv           # Sensor dataset
+├── images/                       # README figures and app screenshots
+├── models/
+│   └── model.pkl                 # Trained model (scikit-learn 1.4.2)
+├── notebooks/
+│   └── Data_Preprocessing.ipynb  # EDA, feature engineering, training, threshold analysis
+├── src/
+│   └── train_model.py            # Reproducible training + evaluation script
+├── requirements.txt
+└── README.md
+```
 
-# 8. Future Work
+## Getting Started
 
-- Integration with IoT devices for real-time data collection.
-- Expand model capabilities to detect additional engine faults.
-- Build an alert system for predictive maintenance notifications.
+**Requirements:** Python 3.10 to 3.12 (tested on 3.12). Python 3.13 is not supported by the pinned scikit-learn version.
 
+```bash
+# 1. Clone
+git clone https://github.com/Siddhartha80/AI-Powered-Predictive-Maintenance-System-for-Vehicles-with-Real-Time-Data-Visualization-and-Analysis.git
+cd AI-Powered-Predictive-Maintenance-System-for-Vehicles-with-Real-Time-Data-Visualization-and-Analysis
 
+# 2. Create an environment and install dependencies
+python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
 
+# 3. Launch the app (opens at http://localhost:8501)
+streamlit run app/app.py
+```
 
+**Retrain the model** (also prints accuracy, AUC and the classification report):
 
+```bash
+python src/train_model.py                              # overwrites models/model.pkl
+python src/train_model.py --roc-plot images/roc_curve.png
+```
 
+> `models/model.pkl` is a pickle and only loads under the scikit-learn version it was saved with (1.4.2, pinned in `requirements.txt`). If you use a different version, run the retraining command above to regenerate it.
 
+**Notebook:** open `notebooks/Data_Preprocessing.ipynb` with Jupyter (`pip install jupyter`) and run it from the `notebooks/` folder; it reads `../Data/engine_data.csv`.
 
+## Limitations
 
+- **Modest accuracy.** 66.6% accuracy and 0.70 AUC mean predictions should be treated as a starting point. Class 0 recall is low (0.36).
+- **No hyperparameter tuning or cross-validation.** Results come from a single train/test split.
+- **Static data, no timestamps.** The dataset has no time dimension, so the model cannot estimate *when* maintenance will be needed. The notebook's exploratory "maintenance window" analysis uses row positions as a stand-in for time and should not be read as a real maintenance schedule.
+- **No live data ingestion.** The app takes manual slider input; it does not connect to vehicle sensors or an OBD/IoT feed.
+- **Sliders are bounded** to the ranges seen in the training data, so the app cannot probe out-of-range readings.
 
+## Roadmap
+
+- Class-weighting or threshold tuning to improve recall on class 0
+- Cross-validation and hyperparameter search; compare against other models (Random Forest, XGBoost)
+- Feature-importance / SHAP explanations in the app
+- Time-stamped data to support true time-to-maintenance estimation
+- IoT / telematics integration for live sensor data, and alerting for maintenance notifications
+
+## Author
+
+**Siddhartha Mettu**
+M.S. Data Science, Arizona State University
+
+[LinkedIn](https://www.linkedin.com/in/siddhartha-mettu/) · [GitHub](https://github.com/Siddhartha80)
